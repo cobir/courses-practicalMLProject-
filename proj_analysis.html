@@ -1,0 +1,187 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="LibreOffice 4.1.6.2 (Linux)">
+	<META NAME="AUTHOR" CONTENT="cobi reouven">
+	<META NAME="CREATED" CONTENT="20150516;43300000000000">
+	<META NAME="CHANGEDBY" CONTENT="cobi reouven">
+	<META NAME="CHANGED" CONTENT="20150516;51500000000000">
+	<META NAME="AppVersion" CONTENT="15.0000">
+	<META NAME="DocSecurity" CONTENT="0">
+	<META NAME="HyperlinksChanged" CONTENT="false">
+	<META NAME="LinksUpToDate" CONTENT="false">
+	<META NAME="ScaleCrop" CONTENT="false">
+	<META NAME="ShareDoc" CONTENT="false">
+	<STYLE TYPE="text/css">
+	<!--
+		@page { margin-left: 1.25in; margin-right: 1.25in; margin-top: 1in; margin-bottom: 1in }
+		P { margin-bottom: 0.08in; direction: ltr; widows: 2; orphans: 2 }
+		H1 { margin-bottom: 0in; direction: ltr; color: #2e74b5; page-break-inside: avoid; widows: 2; orphans: 2 }
+		H1.western { font-family: "Calibri Light", serif; font-size: 16pt; font-weight: normal }
+		H1.cjk { font-size: 16pt; font-weight: normal }
+		H1.ctl { font-family: ; font-size: 16pt; font-weight: normal }
+		H2 { margin-top: 0.03in; margin-bottom: 0in; direction: ltr; color: #2e74b5; page-break-inside: avoid; widows: 2; orphans: 2 }
+		H2.western { font-family: "Calibri Light", serif; font-size: 13pt; font-weight: normal }
+		H2.cjk { font-family: "Arial"; font-size: 13pt; font-weight: normal }
+		H2.ctl { font-family: ; font-size: 13pt; font-weight: normal }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="en-US" DIR="RTL">
+<H1 DIR="LTR" CLASS="western">Practical Machine Learning 
+</H1>
+<P DIR="LTR" STYLE="margin-bottom: 0.11in"><BR><BR>
+</P>
+<H2 DIR="LTR" CLASS="western">Course Project Analysis</H2>
+<P DIR="LTR" STYLE="margin-bottom: 0.11in"><BR><BR>
+</P>
+<P DIR="LTR" STYLE="margin-bottom: 0.11in">I chose to use the random
+forest classifier as this is a classification problem.</P>
+<P DIR="LTR" STYLE="margin-bottom: 0.11in">I used cross validation by
+dividing the training set into two sets: a training set (75% of the
+samples) and a testing set (25% of the samples). All the training is
+done with the training set. The testing set is used only once to get
+an estimation of the model's performance with the real test set (of
+the 20 samples).</P>
+<P DIR="LTR" STYLE="margin-bottom: 0.11in">Looking at the features
+themselves, most of them seemed to be relevant for the prediction.
+One feature, X, was the position of the sample in the pml-training
+data. Plotting it against the classe feature I got the following:</P>
+<P DIR="LTR" STYLE="margin-bottom: 0.11in"><BR><BR>
+</P>
+<P DIR="LTR" STYLE="margin-bottom: 0.11in"><IMG SRC="i_3bb05e5eb228802a_html_83c7d730.png" NAME="Picture 1" ALIGN=BOTTOM WIDTH=554 HEIGHT=434 BORDER=0></P>
+<P DIR="LTR" STYLE="margin-bottom: 0.11in">The conclusion is that X
+should not be part of the features used for training because it is
+not related to predicting classe. Since the samples are ordered in
+such a way that X seems to predict classe it might also harm the
+prediction model.</P>
+<P DIR="LTR" STYLE="margin-bottom: 0.11in">The data has 160 features.
+I wanted to check for correlation between the numeric features. I
+removed the factor features and the ones with NA values and was left
+with a data frame of 55 features.</P>
+<P DIR="LTR" STYLE="margin-bottom: 0.11in"> Building the correlation
+matrix I found that there are quite a few pairs of features with very
+high correlation (above 0.9). For that reason I decide to do
+pre-processing on the data by doing principal component analysis. The
+goal was to find a smaller set of features that capture the
+information in the original features.</P>
+<P DIR="LTR" STYLE="margin-bottom: 0.11in">I got a new and smaller
+set of features (27 features).</P>
+<P DIR="LTR" STYLE="margin-bottom: 0.11in">Now I trained the data
+frame with the new features using the random forest method. Since it
+took a lot of time, I used the doParallel library and used the cores
+on my machine so that the training used 3 cores. The training took
+~17 minutes.</P>
+<P DIR="LTR" STYLE="margin-bottom: 0.11in">This is the model I got:</P>
+<P DIR="LTR" STYLE="margin-bottom: 0in; line-height: 100%"><FONT FACE="Courier New, serif"><FONT SIZE=2><FONT COLOR="#000000"><FONT FACE="Lucida Console, serif"><SPAN STYLE="background: #e1e2e5">Random
+Forest </SPAN></FONT></FONT></FONT></FONT>
+</P>
+<P DIR="LTR" STYLE="margin-bottom: 0in; line-height: 100%"><BR>
+</P>
+<P DIR="LTR" STYLE="margin-bottom: 0in; line-height: 100%"><FONT FACE="Courier New, serif"><FONT SIZE=2><FONT COLOR="#000000"><FONT FACE="Lucida Console, serif"><SPAN STYLE="background: #e1e2e5">14718
+samples</SPAN></FONT></FONT></FONT></FONT></P>
+<P DIR="LTR" STYLE="margin-bottom: 0in; line-height: 100%"><FONT COLOR="#000000"><SPAN STYLE="background: #e1e2e5">
+  <FONT FACE="Courier New, serif"><FONT SIZE=2><FONT FACE="Lucida Console, serif">26
+predictor</SPAN></FONT></FONT></FONT></FONT></P>
+<P DIR="LTR" STYLE="margin-bottom: 0in; line-height: 100%"><FONT COLOR="#000000"><SPAN STYLE="background: #e1e2e5">
+   <FONT FACE="Courier New, serif"><FONT SIZE=2><FONT FACE="Lucida Console, serif">5
+classes: 'A', 'B', 'C', 'D', 'E' </SPAN></FONT></FONT></FONT></FONT>
+</P>
+<P DIR="LTR" STYLE="margin-bottom: 0in; line-height: 100%"><BR>
+</P>
+<P DIR="LTR" STYLE="margin-bottom: 0in; line-height: 100%"><FONT FACE="Courier New, serif"><FONT SIZE=2><FONT COLOR="#000000"><FONT FACE="Lucida Console, serif"><SPAN STYLE="background: #e1e2e5">No
+pre-processing</SPAN></FONT></FONT></FONT></FONT></P>
+<P DIR="LTR" STYLE="margin-bottom: 0in; line-height: 100%"><FONT FACE="Courier New, serif"><FONT SIZE=2><FONT COLOR="#000000"><FONT FACE="Lucida Console, serif"><SPAN STYLE="background: #e1e2e5">Resampling:
+Bootstrapped (25 reps) </SPAN></FONT></FONT></FONT></FONT>
+</P>
+<P DIR="LTR" STYLE="margin-bottom: 0in; line-height: 100%"><BR>
+</P>
+<P DIR="LTR" STYLE="margin-bottom: 0in; line-height: 100%"><FONT FACE="Courier New, serif"><FONT SIZE=2><FONT COLOR="#000000"><FONT FACE="Lucida Console, serif"><SPAN STYLE="background: #e1e2e5">Summary
+of sample sizes: 14718, 14718, 14718, 14718, 14718, 14718, ... </SPAN></FONT></FONT></FONT></FONT>
+</P>
+<P DIR="LTR" STYLE="margin-bottom: 0in; line-height: 100%"><BR>
+</P>
+<P DIR="LTR" STYLE="margin-bottom: 0in; line-height: 100%"><FONT FACE="Courier New, serif"><FONT SIZE=2><FONT COLOR="#000000"><FONT FACE="Lucida Console, serif"><SPAN STYLE="background: #e1e2e5">Resampling
+results across tuning parameters:</SPAN></FONT></FONT></FONT></FONT></P>
+<P DIR="LTR" STYLE="margin-bottom: 0in; line-height: 100%"><BR>
+</P>
+<P DIR="LTR" STYLE="margin-bottom: 0in; line-height: 100%"><FONT COLOR="#000000"><SPAN STYLE="background: #e1e2e5">
+ <FONT FACE="Courier New, serif"><FONT SIZE=2><FONT FACE="Lucida Console, serif">mtry
+ Accuracy   Kappa      Accuracy SD  Kappa SD   </SPAN></FONT></FONT></FONT></FONT>
+</P>
+<P DIR="LTR" STYLE="margin-bottom: 0in; line-height: 100%"><FONT COLOR="#000000"><SPAN STYLE="background: #e1e2e5">
+  <FONT FACE="Courier New, serif"><FONT SIZE=2><FONT FACE="Lucida Console, serif">2
+   0.9660186  0.9569982  0.003404959  0.004319098</SPAN></FONT></FONT></FONT></FONT></P>
+<P DIR="LTR" STYLE="margin-bottom: 0in; line-height: 100%"><FONT COLOR="#000000"><SPAN STYLE="background: #e1e2e5">
+ <FONT FACE="Courier New, serif"><FONT SIZE=2><FONT FACE="Lucida Console, serif">14
+   0.9588981  0.9479887  0.003713374  0.004709117</SPAN></FONT></FONT></FONT></FONT></P>
+<P DIR="LTR" STYLE="margin-bottom: 0in; line-height: 100%"><FONT COLOR="#000000"><SPAN STYLE="background: #e1e2e5">
+ <FONT FACE="Courier New, serif"><FONT SIZE=2><FONT FACE="Lucida Console, serif">27
+   0.9481556  0.9343977  0.004909058  0.006219914</SPAN></FONT></FONT></FONT></FONT></P>
+<P DIR="LTR" STYLE="margin-bottom: 0.11in"><BR><BR>
+</P>
+<P DIR="LTR" STYLE="margin-bottom: 0.11in">I used the model to
+predict the testing partition of the training set.</P>
+<P DIR="LTR" STYLE="margin-bottom: 0.11in">The confusion matrix
+reported very good results: 
+</P>
+<P DIR="LTR" STYLE="margin-bottom: 0in; line-height: 100%"><FONT COLOR="#000000"><FONT FACE="Lucida Console, serif"><FONT SIZE=2><SPAN STYLE="background: #e1e2e5">Confusion
+Matrix and Statistics</SPAN></FONT></FONT></FONT></P>
+<P DIR="LTR" STYLE="margin-bottom: 0in; line-height: 100%"><BR>
+</P>
+<P DIR="LTR" STYLE="margin-bottom: 0in; line-height: 100%"><FONT COLOR="#000000"><SPAN STYLE="background: #e1e2e5">
+         <FONT FACE="Lucida Console, serif"><FONT SIZE=2>Reference</SPAN></FONT></FONT></FONT></P>
+<P DIR="LTR" STYLE="margin-bottom: 0in; line-height: 100%"><FONT COLOR="#000000"><FONT FACE="Lucida Console, serif"><FONT SIZE=2><SPAN STYLE="background: #e1e2e5">Prediction
+   A    B    C    D    E</SPAN></FONT></FONT></FONT></P>
+<P DIR="LTR" STYLE="margin-bottom: 0in; line-height: 100%"><FONT COLOR="#000000"><SPAN STYLE="background: #e1e2e5">
+        <FONT FACE="Lucida Console, serif"><FONT SIZE=2>A 1386    0  
+ 7    1    1</SPAN></FONT></FONT></FONT></P>
+<P DIR="LTR" STYLE="margin-bottom: 0in; line-height: 100%"><FONT COLOR="#000000"><SPAN STYLE="background: #e1e2e5">
+        <FONT FACE="Lucida Console, serif"><FONT SIZE=2>B   13  922  
+13    0    1</SPAN></FONT></FONT></FONT></P>
+<P DIR="LTR" STYLE="margin-bottom: 0in; line-height: 100%"><FONT COLOR="#000000"><SPAN STYLE="background: #e1e2e5">
+        <FONT FACE="Lucida Console, serif"><FONT SIZE=2>C    1    2 
+846    6    0</SPAN></FONT></FONT></FONT></P>
+<P DIR="LTR" STYLE="margin-bottom: 0in; line-height: 100%"><FONT COLOR="#000000"><SPAN STYLE="background: #e1e2e5">
+        <FONT FACE="Lucida Console, serif"><FONT SIZE=2>D    1    0  
+26  776    1</SPAN></FONT></FONT></FONT></P>
+<P DIR="LTR" STYLE="margin-bottom: 0in; line-height: 100%"><FONT COLOR="#000000"><SPAN STYLE="background: #e1e2e5">
+        <FONT FACE="Lucida Console, serif"><FONT SIZE=2>E    1    5  
+ 5   10  880</SPAN></FONT></FONT></FONT></P>
+<P DIR="LTR" STYLE="margin-bottom: 0in; line-height: 100%"><BR>
+</P>
+<P DIR="LTR" STYLE="margin-bottom: 0in; line-height: 100%"><FONT COLOR="#000000"><FONT FACE="Lucida Console, serif"><FONT SIZE=2><SPAN STYLE="background: #e1e2e5">Overall
+Statistics</SPAN></FONT></FONT></FONT></P>
+<P DIR="LTR" STYLE="margin-bottom: 0in; line-height: 100%"><FONT COLOR="#000000"><SPAN STYLE="background: #e1e2e5">
+                                         </SPAN></FONT>
+</P>
+<P DIR="LTR" STYLE="margin-bottom: 0in; line-height: 100%"><FONT COLOR="#000000"><SPAN STYLE="background: #e1e2e5">
+              <FONT FACE="Lucida Console, serif"><FONT SIZE=2>Accuracy
+: 0.9808          </SPAN></FONT></FONT></FONT>
+</P>
+<P DIR="LTR" STYLE="margin-bottom: 0in; line-height: 100%"><FONT COLOR="#000000"><SPAN STYLE="background: #e1e2e5">
+                <FONT FACE="Lucida Console, serif"><FONT SIZE=2>95%
+CI : (0.9766, 0.9845)</SPAN></FONT></FONT></FONT></P>
+<P DIR="LTR" STYLE="margin-bottom: 0in; line-height: 100%"><FONT COLOR="#000000"><SPAN STYLE="background: #e1e2e5">
+   <FONT FACE="Lucida Console, serif"><FONT SIZE=2>No Information
+Rate : 0.2859          </SPAN></FONT></FONT></FONT>
+</P>
+<P DIR="LTR" STYLE="margin-bottom: 0in; line-height: 100%"><FONT COLOR="#000000"><SPAN STYLE="background: #e1e2e5">
+   <FONT FACE="Lucida Console, serif"><FONT SIZE=2>P-Value [Acc &gt;
+NIR] : &lt; 2.2e-16       </SPAN></FONT></FONT></FONT>
+</P>
+<P DIR="LTR" STYLE="margin-bottom: 0in; line-height: 100%"><FONT COLOR="#000000"><SPAN STYLE="background: #e1e2e5">
+                                         </SPAN></FONT>
+</P>
+<P DIR="LTR" STYLE="margin-bottom: 0in; line-height: 100%"><FONT COLOR="#000000"><SPAN STYLE="background: #e1e2e5">
+                 <FONT FACE="Lucida Console, serif"><FONT SIZE=2>Kappa
+: 0.9758          </SPAN></FONT></FONT></FONT>
+</P>
+<P DIR="LTR" STYLE="margin-bottom: 0.11in"><BR><BR>
+</P>
+<P DIR="LTR" STYLE="margin-bottom: 0.11in">Therefore my estimated out
+of sample error is ~ 2%.</P>
+</BODY>
+</HTML>
